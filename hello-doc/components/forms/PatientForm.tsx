@@ -9,6 +9,7 @@ import CustomFormField from "../custom-form-field/CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { useState } from "react";
 import { userFormValidation } from "@/lib/valisation";
+import { createUser } from "@/lib/actions/patient.actions";
 
 export enum FieldType {
   INPUT = "input",
@@ -28,21 +29,24 @@ const PatientForm = () => {
   const form = useForm<z.infer<typeof userFormValidation>>({
     resolver: zodResolver(userFormValidation),
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
-      phoneNumber: "",
+      phone: "",
     },
   });
 
   async function onSubmit({
-    username,
+    name,
     email,
-    phoneNumber,
+    phone,
   }: z.infer<typeof userFormValidation>) {
     setIsLoading(true);
     try {
-      const userData = { username, email, phoneNumber };
-      console.log(userData);
+      const userData = { name, email, phone };
+      const user = await createUser(userData);
+      if (user) {
+        console.log("User created successfully");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -62,7 +66,7 @@ const PatientForm = () => {
         <CustomFormField
           control={form.control}
           fieldType={FieldType.INPUT}
-          name="username"
+          name="name"
           label="Username"
           placeholder="Donal Trump"
           iconSrc="/assets/icons/user.svg"
