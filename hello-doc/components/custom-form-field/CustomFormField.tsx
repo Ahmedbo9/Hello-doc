@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import {
   FormControl,
@@ -58,22 +57,26 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
 
     case FieldType.PHONE_NUMBER:
       return (
-        <div>
+        <FormControl>
           <PhoneInput
-            value={field.value as E164Number | undefined}
+            defaultCountry="US"
             placeholder={placeholder}
-            defaultCountry="CA"
-            International
+            international
             withCountryCallingCode
+            value={field.value as E164Number | undefined}
             onChange={field.onChange}
             className="input-phone"
           />
-        </div>
+        </FormControl>
       );
+
+    default:
+      return null;
   }
 };
 
 const CustomFormField = (props: CustomProps) => {
+  console.log("rendering  component");
   const { control, fieldType, name, label } = props;
   return (
     <FormField

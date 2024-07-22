@@ -1,0 +1,39 @@
+"use client";
+import React from "react";
+import { Button } from "./ui/button";
+import Image from "next/image";
+
+interface SubmitButtonProps {
+  isLoading: boolean;
+  className?: string;
+  children: React.ReactNode;
+}
+
+const SubmitButton = ({
+  isLoading,
+  className,
+  children,
+}: SubmitButtonProps) => {
+  return (
+    <Button
+      type="submit"
+      disabled={isLoading}
+      className={className ?? "shad-primary-btn w-full"}
+    >
+      {isLoading ? (
+        <div className="flex item-center gap-4">
+          <Image
+            src="/assets/icons/loading.svg"
+            width={24}
+            height={24}
+            alt="loading"
+          ></Image>
+        </div>
+      ) : (
+        children
+      )}
+    </Button>
+  );
+};
+
+export default SubmitButton;

@@ -2,18 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 
 import { z } from "zod";
 import CustomFormField from "../custom-form-field/CustomFormField";
-
-const formSchema = z.object({
-  username: z
-    .string()
-    .min(2)
-    .max(50, { message: "Username must be between 2 and 50 characters" }),
-});
+import SubmitButton from "../SubmitButton";
+import { useState } from "react";
+import { userFormValidation } from "@/lib/valisation";
 
 export enum FieldType {
   INPUT = "input",
@@ -27,19 +22,31 @@ export enum FieldType {
 }
 
 const PatientForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof userFormValidation>>({
+    resolver: zodResolver(userFormValidation),
     defaultValues: {
       username: "",
+      email: "",
+      phoneNumber: "",
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit({
+    username,
+    email,
+    phoneNumber,
+  }: z.infer<typeof userFormValidation>) {
+    setIsLoading(true);
+    try {
+      const userData = { username, email, phoneNumber };
+      console.log(userData);
+    } catch (error) {
+      console.error(error);
+    }
+    setIsLoading(false);
   }
 
   return (
@@ -73,16 +80,14 @@ const PatientForm = () => {
         />
 
         <CustomFormField
-          control={form.control}
           fieldType={FieldType.PHONE_NUMBER}
-          name="Phone Number"
-          label="Phone Number"
-          placeholder="555-555-5555"
-          // iconSrc="/assets/icons/phone.svg"
-          // iconAlt="Phone"
+          control={form.control}
+          name="phone"
+          label="Phone number"
+          placeholder="(555) 123-4567"
         />
 
-        <Button type="submit">Submit</Button>
+        <SubmitButton isLoading={isLoading}> Submit </SubmitButton>
       </form>
     </Form>
   );
