@@ -10,6 +10,7 @@ import SubmitButton from "../SubmitButton";
 import { useState } from "react";
 import { userFormValidation } from "@/lib/valisation";
 import { createUser } from "@/lib/actions/patient.actions";
+import { useRouter } from "next/navigation";
 
 export enum FieldType {
   INPUT = "input",
@@ -24,6 +25,7 @@ export enum FieldType {
 
 const PatientForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof userFormValidation>>({
@@ -45,7 +47,7 @@ const PatientForm = () => {
       const userData = { name, email, phone };
       const user = await createUser(userData);
       if (user) {
-        console.log("User created successfully");
+        router.push(`/patient/${user.$id}/register`);
       }
     } catch (error) {
       console.error(error);
