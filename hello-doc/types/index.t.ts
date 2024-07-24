@@ -2,7 +2,7 @@
 
 import { Appointment } from "./appwrite.types";
 
-declare type SearchParamProps = {
+export declare type SearchParamProps = {
   params: { [key: string]: string };
   searchParams: { [key: string]: string | string[] | undefined };
 };
@@ -15,11 +15,11 @@ export declare interface CreateUserParams {
   email: string;
   phone: string;
 }
-declare interface User extends CreateUserParams {
+export declare interface User extends CreateUserParams {
   $id: string;
 }
 
-declare interface RegisterUserParams extends CreateUserParams {
+export declare interface RegisterUserParams extends CreateUserParams {
   userId: string;
   birthDate: Date;
   gender: Gender;
@@ -40,7 +40,7 @@ declare interface RegisterUserParams extends CreateUserParams {
   privacyConsent: boolean;
 }
 
-declare type CreateAppointmentParams = {
+export declare type CreateAppointmentParams = {
   userId: string;
   patient: string;
   primaryPhysician: string;
@@ -50,7 +50,7 @@ declare type CreateAppointmentParams = {
   note: string | undefined;
 };
 
-declare type UpdateAppointmentParams = {
+export declare type UpdateAppointmentParams = {
   appointmentId: string;
   userId: string;
   appointment: Appointment;
