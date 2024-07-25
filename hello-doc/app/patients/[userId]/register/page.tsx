@@ -9,8 +9,8 @@ const Register = async ({ params: { userId } }: SearchParamProps) => {
 
   return (
     <div className="flex h-screen max-h-screen">
-      <section className="remove-scrollbar container my-auto">
-        <div className="sub-container max-w-[469]">
+      <section className="remove-scrollbar container">
+        <div className="sub-container max-w-[860] flex-1 flex-col py-10">
           <Image
             src="/assets/icons/logo-full.svg"
             height={1000}
@@ -20,8 +20,7 @@ const Register = async ({ params: { userId } }: SearchParamProps) => {
           ></Image>
           {<RegisterForm user={user} />}
           <div className="text-14-regular mt-20 justify-between flex">
-            <p className="justify-items-end text-dark-600 xl:text-left">
-              {" "}
+            <p className="copyright py-12">
               © 2021 HelloDoc. All rights reserved.
             </p>
           </div>

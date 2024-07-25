@@ -20,6 +20,8 @@ import PhoneInput from "react-phone-number-input";
 import { E164Number } from "libphonenumber-js";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Textarea } from "../ui/textarea";
+import { Checkbox } from "../ui/checkbox";
 
 interface CustomProps {
   control: Control<any>;
@@ -46,6 +48,9 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
     dateFormats,
     renderSkeleton,
     children,
+    disabled,
+    name,
+    label,
   } = props;
 
   switch (fieldType) {
@@ -69,6 +74,18 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             ></Input>
           </FormControl>
         </div>
+      );
+
+    case FieldType.TEXTAREA:
+      return (
+        <FormControl>
+          <Textarea
+            placeholder={placeholder}
+            {...field}
+            className="shad-textArea"
+            disabled={disabled}
+          />
+        </FormControl>
       );
 
     case FieldType.PHONE_NUMBER:
@@ -128,6 +145,22 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
               {children}
             </SelectContent>
           </Select>
+        </FormControl>
+      );
+
+    case FieldType.CHECKBOX:
+      return (
+        <FormControl>
+          <div className="flex item-centergap-4">
+            <Checkbox
+              id={name}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+            />
+            <label className="checkbox-label ml-2" htmlFor={name}>
+              {label}
+            </label>
+          </div>
         </FormControl>
       );
 
