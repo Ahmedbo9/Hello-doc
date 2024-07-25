@@ -9,4 +9,6 @@ export const userFormValidation = z.object({
   phone: z
     .string()
     .refine((phone) => /^\+\d{10,15}$/.test(phone), "Invalid phone number"),
+  date_of_birth: z.string().refine((dob) => !!new Date(dob), "Invalid date"),
+  primaryPhysician: z.string().optional(),
 });
