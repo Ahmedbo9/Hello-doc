@@ -2,7 +2,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form, FormControl } from "@/components/ui/form";
-import { SelectItem } from "@radix-ui/react-select";
 import { z } from "zod";
 import CustomFormField from "../custom-form-field/CustomFormField";
 import SubmitButton from "../SubmitButton";
@@ -16,6 +15,15 @@ import { Doctors, GenderOptions } from "@/app/constants";
 import { Label } from "@radix-ui/react-label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const RegisterForm = ({ user }: { user: User }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -196,8 +204,8 @@ const RegisterForm = ({ user }: { user: User }) => {
           label="Primary care physician"
           placeholder="Select a physician"
         >
-          {Doctors.map((doctor, i) => (
-            <SelectItem key={doctor.name + i} value={doctor.name}>
+          {Doctors.map((doctor) => (
+            <SelectItem key={doctor.name} value={doctor.name}>
               <div className="flex cursor-pointer items-center gap-2">
                 <Image
                   src={doctor.image}
