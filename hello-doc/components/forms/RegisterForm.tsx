@@ -6,12 +6,17 @@ import { z } from "zod";
 import CustomFormField from "../custom-form-field/CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { useState } from "react";
-import { userFormValidation } from "@/lib/valisation";
-import { createUser } from "@/lib/actions/patient.actions";
+import { PatientFormValidation } from "@/lib/validation";
+import { createUser, registerPatient } from "@/lib/actions/patient.actions";
 import { useRouter } from "next/navigation";
 import { User } from "@/types/index.t";
 import { FieldType } from "./PatientForm";
-import { Doctors, GenderOptions, IdentificationTypes } from "@/app/constants";
+import {
+  Doctors,
+  GenderOptions,
+  IdentificationTypes,
+  PatientFormDefaultValues,
+} from "@/app/constants";
 import { Label } from "@radix-ui/react-label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
@@ -22,29 +27,43 @@ const RegisterForm = ({ user }: { user: User }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof userFormValidation>>({
-    resolver: zodResolver(userFormValidation),
+  const form = useForm<z.infer<typeof PatientFormValidation>>({
+    resolver: zodResolver(PatientFormValidation),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
+      ...PatientFormDefaultValues,
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof userFormValidation>) => {
+  const onSubmit = async (values: z.infer<typeof PatientFormValidation>) => {
     setIsLoading(true);
 
+    let formData;
+
+    if (
+      values.identificationDocument &&
+      values.identificationDocument.length > 0
+    ) {
+      const blobFile = new Blob([values.identificationDocument[0]], {
+        type: values.identificationDocument[0].type,
+      });
+
+      formData = new FormData();
+      formData.append("blobFile", blobFile);
+      formData.append("fileName", values.identificationDocument[0].name);
+    }
+
     try {
-      const user = {
-        name: values.name,
-        email: values.email,
-        phone: values.phone,
+      const patientData = {
+        ...values,
+        userId: user.$id,
+        birthDate: new Date(values.birthDate),
+        identificationDocument: formData,
       };
+      //@ts-ignore
+      const patient = await registerPatient(patientData);
 
-      const newUser = await createUser(user);
-
-      if (newUser) {
-        router.push(`/patients/${newUser.$id}/register`);
+      if (patient) {
+        router.push(`/patients/${user.$id}/appointments`);
       }
     } catch (error) {
       console.log(error);
@@ -111,7 +130,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             <CustomFormField
               fieldType={FieldType.DATE_PICKER}
               control={form.control}
-              name="date_of_birth"
+              name="birthDate"
               label="Date of Birth"
             />
           </div>
@@ -145,7 +164,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             <CustomFormField
               control={form.control}
               fieldType={FieldType.INPUT}
-              name="adress"
+              name="address"
               label="Address"
               placeholder="4356 st avenue, New York, NY, 10001"
             />
@@ -167,7 +186,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             <CustomFormField
               control={form.control}
               fieldType={FieldType.INPUT}
-              name="emergency_contact_name"
+              name="emergencyContactName"
               label="Emergency Contact Name"
               placeholder="Emergency Contact Name"
             />
@@ -177,7 +196,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             <CustomFormField
               fieldType={FieldType.PHONE_NUMBER}
               control={form.control}
-              name="emergency_contact_phone"
+              name="emergencyContactNumber"
               label="Emergency Contact Phone"
               placeholder="(555) 123-4567"
             />
@@ -218,7 +237,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             <CustomFormField
               control={form.control}
               fieldType={FieldType.INPUT}
-              name="InsuranceProvider"
+              name="insuranceProvider"
               label="Insurance Provider"
               placeholder="XXX Insurance"
             />
@@ -228,7 +247,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             <CustomFormField
               control={form.control}
               fieldType={FieldType.INPUT}
-              name="InsurancePolicyNumber"
+              name="insurancePolicyNumber"
               label="Insurance Policy Number"
               placeholder="123456789"
             />
@@ -320,7 +339,6 @@ const RegisterForm = ({ user }: { user: User }) => {
             </FormControl>
           )}
         />
-
         <section className="space-y-6">
           <div className="mb-9 space-y-1">
             <h2 className="sub-header">Consentement, Privacy and Disclosure</h2>
