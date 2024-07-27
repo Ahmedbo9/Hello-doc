@@ -38,10 +38,9 @@ const RegisterForm = ({ user }: { user: User }) => {
     setIsLoading(true);
 
     let formData;
-
     if (
       values.identificationDocument &&
-      values.identificationDocument.length > 0
+      values.identificationDocument?.length > 0
     ) {
       const blobFile = new Blob([values.identificationDocument[0]], {
         type: values.identificationDocument[0].type,
@@ -63,7 +62,9 @@ const RegisterForm = ({ user }: { user: User }) => {
       const patient = await registerPatient(patientData);
 
       if (patient) {
-        router.push(`/patients/${user.$id}/appointments`);
+        // router.push(`/patients/${user.$id}/appointments`);
+        console.log("Patient created", patient);
+        console.log("formdata", formData);
       }
     } catch (error) {
       console.log(error);
@@ -331,7 +332,7 @@ const RegisterForm = ({ user }: { user: User }) => {
         <CustomFormField
           fieldType={FieldType.SKELETON}
           control={form.control}
-          name="IdentificationDocument"
+          name="identificationDocument"
           label="Scan of Identification Document"
           renderSkeleton={(field) => (
             <FormControl>
