@@ -82,7 +82,7 @@ const AppointmentForm = ({
           console.log("Appointment created successfully");
           form.reset();
           router.push(
-            `/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`
+            `/patients/${userId}/appointments/success?appointmentId=${appointment.$id}`
           );
         }
       }
