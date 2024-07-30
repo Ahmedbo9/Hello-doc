@@ -19,6 +19,7 @@ export declare interface User extends CreateUserParams {
   $id: string;
 }
 
+
 export declare interface RegisterUserParams extends CreateUserParams {
   userId: string;
   birthDate: Date;
