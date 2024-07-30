@@ -1,3 +1,4 @@
+"use server";
 import {
   DATABASE_ID,
   databases,
@@ -21,6 +22,9 @@ export const createAppointment = async (
     );
     return parseStringify(newAppointment);
   } catch (error: any) {
-    console.error("An error occurred while registering a new patient:", error);
+    console.error(
+      "An error occurred while registering a new appointment :",
+      error
+    );
   }
 };

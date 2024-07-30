@@ -16,6 +16,7 @@ import { Doctors } from "@/app/constants";
 import Image from "next/image";
 import { Status } from "@/types/index.t";
 import { createAppointment } from "@/lib/actions/appointment.actions";
+import { Patient } from "../../types/appwrite.types";
 
 const AppointmentForm = ({
   type,
@@ -64,6 +65,7 @@ const AppointmentForm = ({
 
     try {
       if (type === "create" && patientId) {
+        console.log("Creating appointment");
         const appointmentData = {
           userId,
           patient: patientId,
@@ -72,9 +74,12 @@ const AppointmentForm = ({
           schedule: new Date(values.schedule),
           note: values.note,
           status: status as Status,
+          cancellationReason: values.cancellationReason,
         };
         const appointment = await createAppointment(appointmentData);
+        console.log("appointment", appointment);
         if (appointment) {
+          console.log("Appointment created successfully");
           form.reset();
           router.push(
             `/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`

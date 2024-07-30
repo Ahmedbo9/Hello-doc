@@ -7,7 +7,7 @@ import CustomFormField from "../custom-form-field/CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { useState } from "react";
 import { PatientFormValidation } from "@/lib/validation";
-import { createUser, registerPatient } from "@/lib/actions/patient.actions";
+import { registerPatient } from "@/lib/actions/patient.actions";
 import { useRouter } from "next/navigation";
 import { User } from "@/types/index.t";
 import { FieldType } from "./PatientForm";
@@ -62,7 +62,7 @@ const RegisterForm = ({ user }: { user: User }) => {
       const patient = await registerPatient(patientData);
 
       if (patient) {
-        // router.push(`/patients/${user.$id}/appointments`);
+        router.push(`/patients/${user.$id}/appointments`);
         console.log("Patient created", patient);
         console.log("formdata", formData);
       }
