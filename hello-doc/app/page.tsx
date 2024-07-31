@@ -1,9 +1,14 @@
 import Image from "next/image";
 import PatientForm from "../components/forms/PatientForm";
 import Link from "next/link";
-export default function Home() {
+import { SearchParamProps } from "@/types/index.t";
+import PassKeyModal from "@/components/PassKeyModal";
+export default function Home({ searchParams }: SearchParamProps) {
+  const isAdmin = searchParams?.admin == "true";
   return (
     <div className="flex h-screen max-h-screen">
+      {isAdmin && <PassKeyModal/>}
+
       <section className="remove-scrollbar container my-auto">
         <div className="sub-container max-w-[469]">
           <Image
@@ -16,10 +21,9 @@ export default function Home() {
           <PatientForm />
           <div className="text-14-regular mt-20 justify-between flex">
             <p className="justify-items-end text-dark-600 xl:text-left">
-              {" "}
               © 2021 HelloDoc. All rights reserved.
             </p>
-            <Link href="" className="text-green-500">
+            <Link href="/?admin=true" className="text-green-500">
               Admin
             </Link>
           </div>
