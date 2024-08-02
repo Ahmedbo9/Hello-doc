@@ -7,7 +7,7 @@ import CustomFormField from "../custom-form-field/CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { useState } from "react";
 import { PatientFormValidation } from "@/lib/validation";
-import { registerPatient } from "@/lib/actions/patient.actions";
+import { getUser, registerPatient } from "@/lib/actions/patient.actions";
 import { useRouter } from "next/navigation";
 import { User } from "@/types/index.t";
 import { FieldType } from "./PatientForm";
@@ -31,6 +31,9 @@ const RegisterForm = ({ user }: { user: User }) => {
     resolver: zodResolver(PatientFormValidation),
     defaultValues: {
       ...PatientFormDefaultValues,
+      email: user.email,
+      phone: user.phone,
+      name: user.name,
     },
   });
 

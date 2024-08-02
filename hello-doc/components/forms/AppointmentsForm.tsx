@@ -16,7 +16,6 @@ import { Doctors } from "@/app/constants";
 import Image from "next/image";
 import { Status } from "@/types/index.t";
 import { createAppointment } from "@/lib/actions/appointment.actions";
-import { Patient } from "../../types/appwrite.types";
 
 const AppointmentForm = ({
   type,
@@ -64,7 +63,7 @@ const AppointmentForm = ({
     }
 
     try {
-      if (type === "create" && patientId) {
+      if (type === "schedule" && patientId) {
         console.log("Creating appointment");
         const appointmentData = {
           userId,
@@ -115,7 +114,7 @@ const AppointmentForm = ({
           <p className="text-lg text-dark-700">Lorem ipsum dolor sit amet.</p>
         </section>
 
-        {type === "create" && (
+        {type === "schedule" && (
           <>
             <CustomFormField
               fieldType={FieldType.SELECT}
