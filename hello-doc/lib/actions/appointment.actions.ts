@@ -84,6 +84,8 @@ export const getRecentAppointmentList = async () => {
       ...counts,
       documents: appointments.documents,
     };
+    revalidateAdminPath();
+
     return parseStringify(data);
   } catch (error) {
     console.error(
@@ -95,9 +97,7 @@ export const getRecentAppointmentList = async () => {
 
 export const updateAppointment = async ({
   appointmentId,
-  userId,
   appointment,
-  type,
 }: UpdateAppointmentParams) => {
   try {
     const updatedAppointment = await databases.updateDocument(
@@ -109,9 +109,20 @@ export const updateAppointment = async ({
     if (!updatedAppointment) {
       throw new Error("An error occurred while updating the appointment");
     }
-    revalidatePath("/admin");
+    revalidateAdminPath();
     return parseStringify(updatedAppointment);
   } catch (error: any) {
     console.error("An error occurred while updating the appointment :", error);
+  }
+};
+
+export const revalidateAdminPath = async () => {
+  try {
+    revalidatePath("/admin");
+  } catch (error) {
+    console.error(
+      "An error occurred while revalidating the admin path:",
+      error
+    );
   }
 };
