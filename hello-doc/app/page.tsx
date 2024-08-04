@@ -7,7 +7,7 @@ export default function Home({ searchParams }: SearchParamProps) {
   const isAdmin = searchParams?.admin == "true";
   return (
     <div className="flex h-screen max-h-screen">
-      {isAdmin && <PassKeyModal/>}
+      {isAdmin && <PassKeyModal />}
 
       <section className="remove-scrollbar container my-auto">
         <div className="sub-container max-w-[469]">
@@ -24,7 +24,7 @@ export default function Home({ searchParams }: SearchParamProps) {
               © 2021 HelloDoc. All rights reserved.
             </p>
             <Link href="/?admin=true" className="text-green-500">
-              Admin
+              Admin panel login
             </Link>
           </div>
         </div>
