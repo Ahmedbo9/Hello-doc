@@ -101,4 +101,20 @@ export const updateAppointment = async ({
   userId,
   appointment,
   type,
-}: UpdateAppointmentParams) => {};
+}: UpdateAppointmentParams) => {
+  try {
+    const updatedAppointment = await databases.updateDocument(
+      DATABASE_ID!,
+      APPOINTMENT_COLLECTION_ID!,
+      appointmentId,
+      appointment
+    );
+    if (!updatedAppointment) {
+      throw new Error("An error occurred while updating the appointment");
+    }
+    revalidatePath("/admin");
+    return parseStringify(updatedAppointment);
+  } catch (error: any) {
+    console.error("An error occurred while updating the appointment :", error);
+  }
+};

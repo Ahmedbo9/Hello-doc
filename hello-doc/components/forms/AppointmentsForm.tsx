@@ -15,8 +15,12 @@ import { SelectItem } from "@/components/ui/select";
 import { Doctors } from "@/app/constants";
 import Image from "next/image";
 import { Status } from "@/types/index.t";
-import { createAppointment } from "@/lib/actions/appointment.actions";
+import {
+  createAppointment,
+  updateAppointment,
+} from "@/lib/actions/appointment.actions";
 import { Appointment } from "@/types/appwrite.types";
+import { AnyNode } from "postcss";
 
 const AppointmentForm = ({
   type,
@@ -40,11 +44,13 @@ const AppointmentForm = ({
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-      primaryPhysician: "",
-      schedule: new Date(),
-      reason: "",
-      note: "",
-      cancellationReason: "",
+      primaryPhysician: appointment && appointment.primaryPhysician,
+      schedule: appointment ? new Date(appointment.schedule) : new Date(),
+      reason: appointment && appointment.reason,
+      note: appointment && appointment.note,
+      cancellationReason: appointment
+        ? (appointment.cancellationReason as string | undefined)
+        : "",
     },
   });
 
@@ -93,16 +99,25 @@ const AppointmentForm = ({
         const appointmentToUpdate = {
           userId,
           patient: patientId,
+          appointmentId: appointment?.$id!,
+
           appointment: {
             primaryPhysician: values.primaryPhysician,
-            reason: values.reason!,
             schedule: new Date(values.schedule),
-            newStatus: status as Status,
+            status: status as Status,
             cancellationReason: values.cancellationReason,
           },
           type,
         };
-        const updatedAppointment = await updateAppointment(appointmentToUpdate);
+        const updatedAppointment = await updateAppointment(
+          appointmentToUpdate as any
+        );
+        console.log("updatedAppointment", updatedAppointment);
+        if (updatedAppointment) {
+          console.log("Appointment updated successfully");
+          form.reset();
+          setOpen(false);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -128,12 +143,13 @@ const AppointmentForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex-1">
-        <section className="mb-12 space-y-4 ">
-          <h1 className="text-4xl font-bold">Lorem ipsum dolor sit amet.</h1>
-          <p className="text-lg text-dark-700">Lorem ipsum dolor sit amet.</p>
-        </section>
-
-        {type === "schedule" && (
+        {type === "create" && (
+          <section className="mb-12 space-y-4 ">
+            <h1 className="text-4xl font-bold">New Appointment</h1>
+            <p className="text-lg text-dark-700">Create a new appointment</p>
+          </section>
+        )}
+        {type !== "cancel" && (
           <>
             <CustomFormField
               fieldType={FieldType.SELECT}

@@ -22,7 +22,7 @@ export default async function Appointment({
           ></Image>
 
           <AppointmentForm
-            type="schedule"
+            type="create"
             userId={userId}
             patientId={patient?.$id}
           />
