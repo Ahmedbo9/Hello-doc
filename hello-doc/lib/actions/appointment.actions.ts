@@ -84,9 +84,6 @@ export const getRecentAppointmentList = async () => {
       ...counts,
       documents: appointments.documents,
     };
-
-    revalidatePath("/admin");
-
     return parseStringify(data);
   } catch (error) {
     console.error(
