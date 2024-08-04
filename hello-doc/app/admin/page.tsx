@@ -1,10 +1,9 @@
 import Link from "next/link";
-import React, { useEffect } from "react";
 import Image from "next/image";
 import StatCard from "../../components/StatCard";
 import { getRecentAppointmentList } from "@/lib/actions/appointment.actions";
-import DataTable from "@/components/table/DataTable";
-import Columns from "@/components/table/Columns";
+import { DataTable } from "@/components/table/DataTable";
+import { Columns } from "@/components/table/Columns";
 
 const Admin = async () => {
   const appointments = await getRecentAppointmentList();
@@ -48,6 +47,7 @@ const Admin = async () => {
             icon="/assets/icons/cancelled.svg"
           />
         </section>
+        <DataTable columns={Columns} data={appointments.documents} />
       </main>
     </div>
   );

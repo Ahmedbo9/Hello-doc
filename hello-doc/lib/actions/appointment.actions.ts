@@ -6,8 +6,12 @@ import {
 } from "../appwrite.config";
 import { ID, Query } from "node-appwrite";
 import { parseStringify } from "../utils";
-import { CreateAppointmentParams } from "@/types/index.t";
+import {
+  CreateAppointmentParams,
+  UpdateAppointmentParams,
+} from "@/types/index.t";
 import { Appointment } from "@/types/appwrite.types";
+import { revalidatePath } from "next/cache";
 
 export const createAppointment = async (
   appointmentData: CreateAppointmentParams
@@ -81,6 +85,8 @@ export const getRecentAppointmentList = async () => {
       documents: appointments.documents,
     };
 
+    revalidatePath("/admin");
+
     return parseStringify(data);
   } catch (error) {
     console.error(
@@ -89,3 +95,10 @@ export const getRecentAppointmentList = async () => {
     );
   }
 };
+
+export const updateAppointment = async ({
+  appointmentId,
+  userId,
+  appointment,
+  type,
+}: UpdateAppointmentParams) => {};

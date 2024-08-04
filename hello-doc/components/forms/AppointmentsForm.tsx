@@ -16,15 +16,20 @@ import { Doctors } from "@/app/constants";
 import Image from "next/image";
 import { Status } from "@/types/index.t";
 import { createAppointment } from "@/lib/actions/appointment.actions";
+import { Appointment } from "@/types/appwrite.types";
 
 const AppointmentForm = ({
   type,
   userId,
   patientId,
+  appointment,
+  setOpen,
 }: {
   type: "create" | "cancel" | "schedule";
   userId: string;
   patientId: string;
+  appointment?: Appointment;
+  setOpen: (open: boolean) => void;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -51,19 +56,19 @@ const AppointmentForm = ({
     let status;
 
     switch (type) {
-      case "create":
+      case "schedule":
         status = "scheduled";
         break;
       case "cancel":
         status = "cancelled";
         break;
-      case "schedule":
+      default:
         status = "pending";
         break;
     }
 
     try {
-      if (type === "schedule" && patientId) {
+      if (type === "create" && patientId) {
         console.log("Creating appointment");
         const appointmentData = {
           userId,
@@ -84,6 +89,20 @@ const AppointmentForm = ({
             `/patients/${userId}/appointments/success?appointmentId=${appointment.$id}`
           );
         }
+      } else {
+        const appointmentToUpdate = {
+          userId,
+          patient: patientId,
+          appointment: {
+            primaryPhysician: values.primaryPhysician,
+            reason: values.reason!,
+            schedule: new Date(values.schedule),
+            newStatus: status as Status,
+            cancellationReason: values.cancellationReason,
+          },
+          type,
+        };
+        const updatedAppointment = await updateAppointment(appointmentToUpdate);
       }
     } catch (error) {
       console.log(error);
