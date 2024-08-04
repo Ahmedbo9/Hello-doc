@@ -1,6 +1,6 @@
 # Healthcare Patient Management Application
 
-A comprehensive healthcare patient management application that allows patients to easily register, book, and manage their appointments with doctors. The application features administrative tools for scheduling, confirming, and canceling appointments, all built using Next.js. this project is heavily inspired from javascriptmastery tutorial projet 
+A comprehensive healthcare patient management application that allows patients to easily register, book, and manage their appointments with doctors. The application features administrative tools for scheduling, confirming, and canceling appointments, all built using Next.js.
 
 ## Tech Stack
 - Next.js
